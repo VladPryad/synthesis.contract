@@ -50,5 +50,29 @@ describe('Element & Particle contract', () => {
             let balanceE = await particle.balanceOf(element.address, token_id);
             expect(balanceE).to.equal(BigNumber.from(3))
         })
-    })
+    });
+
+    describe("Element minting", () => {
+
+        it('Transfer electrons to element contract', async () => {
+            let Li_id = 3;
+
+            await particle.connect(addr1).setApprovalForAll(owner.address, true);
+
+            await particle.safeTransferFrom(owner.address, addr1.address, 0, 3, "0x00");
+            await particle.safeTransferFrom(owner.address, addr1.address, 1, 3, "0x00");
+            await particle.safeTransferFrom(owner.address, addr1.address, 2, 4, "0x00");
+
+            await particle.safeTransferFrom(addr1.address, element.address, 0, 3, "0x00");
+            await particle.safeTransferFrom(addr1.address, element.address, 1, 3, "0x00");
+            await particle.safeTransferFrom(addr1.address, element.address, 2, 4, "0x00");
+
+            console.log("Particles balance: ", await element.getParticlesBalance(addr1.address))
+
+            await element.connect(addr1).safeTransferFrom(owner.address, addr1.address, Li_id, 1, "0x00");
+
+            let balanceLi = await element.balanceOf(addr1.address, Li_id);
+            expect(balanceLi).to.equal(BigNumber.from(1))
+        })
+    });
 });

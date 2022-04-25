@@ -20,27 +20,48 @@ contract Element is ERC1155, ERC1155Holder {
     uint256 public constant P = 15;
     uint256 public constant S = 16;
 
-    struct ElementCompound {
-        uint256 e_count;
-        uint256 p_count;
-        uint256 n_count;
-    }
+    enum Particle { ELECTRON, PROTON, NEUTRON }
 
+    mapping(uint256 => mapping(uint256 => uint256)) public elementsCompound; 
     mapping(address => mapping(uint256 => uint256)) public particleTransmitters;
-
-    mapping(uint256 => ElementCompound) public elementsComposition;
 
     constructor() ERC1155("https://synthesis.example/api/item/{id}.json") {
 
-        elementsComposition[H] = ElementCompound(1, 1, 0);
-        elementsComposition[Li] = ElementCompound(3, 3, 4);
-        elementsComposition[Na] = ElementCompound(11, 11, 12);
-        elementsComposition[O] = ElementCompound(8, 8, 8);
-        elementsComposition[C] = ElementCompound(6, 6, 6);
-        elementsComposition[N] = ElementCompound(7, 7, 7);
-        elementsComposition[Cl] = ElementCompound(17, 17, 17);
-        elementsComposition[P] = ElementCompound(15, 15, 16);
-        elementsComposition[S] = ElementCompound(16, 16, 16);
+        elementsCompound[H][uint256(Particle.ELECTRON)] = 1;
+        elementsCompound[H][uint256(Particle.PROTON)] = 1;
+        elementsCompound[H][uint256(Particle.NEUTRON)] = 0;
+
+        elementsCompound[Li][uint256(Particle.ELECTRON)] = 3;
+        elementsCompound[Li][uint256(Particle.PROTON)] = 3;
+        elementsCompound[Li][uint256(Particle.NEUTRON)] = 4;
+
+        elementsCompound[Na][uint256(Particle.ELECTRON)] = 11;
+        elementsCompound[Na][uint256(Particle.PROTON)] = 11;
+        elementsCompound[Na][uint256(Particle.NEUTRON)] = 12;
+
+        elementsCompound[O][uint256(Particle.ELECTRON)] = 8;
+        elementsCompound[O][uint256(Particle.PROTON)] = 8;
+        elementsCompound[O][uint256(Particle.NEUTRON)] = 8;
+
+        elementsCompound[C][uint256(Particle.ELECTRON)] = 6;
+        elementsCompound[C][uint256(Particle.PROTON)] = 6;
+        elementsCompound[C][uint256(Particle.NEUTRON)] = 6;
+
+        elementsCompound[N][uint256(Particle.ELECTRON)] = 7;
+        elementsCompound[N][uint256(Particle.PROTON)] = 7;
+        elementsCompound[N][uint256(Particle.NEUTRON)] = 7;
+
+        elementsCompound[Cl][uint256(Particle.ELECTRON)] = 17;
+        elementsCompound[Cl][uint256(Particle.PROTON)] = 17;
+        elementsCompound[Cl][uint256(Particle.NEUTRON)] = 17;
+
+        elementsCompound[P][uint256(Particle.ELECTRON)] = 15;
+        elementsCompound[P][uint256(Particle.PROTON)] = 15;
+        elementsCompound[P][uint256(Particle.NEUTRON)] = 16;
+
+        elementsCompound[S][uint256(Particle.ELECTRON)] = 16;
+        elementsCompound[S][uint256(Particle.PROTON)] = 16;
+        elementsCompound[S][uint256(Particle.NEUTRON)] = 16;
 
         _mint(msg.sender, H, 10**27, "");
         _mint(msg.sender, Li, 10**27, "");
@@ -53,13 +74,60 @@ contract Element is ERC1155, ERC1155Holder {
         _mint(msg.sender, S, 10**27, "");
     }
 
-    function getElementCompound(uint256 token_id) public view returns(ElementCompound memory) {
+    function getElementCompound(uint256 token_id) public view returns(uint256[3] memory) {
 
-        return elementsComposition[token_id];
+        return [
+            elementsCompound[token_id][uint256(Particle.ELECTRON)],
+            elementsCompound[token_id][uint256(Particle.PROTON)],
+            elementsCompound[token_id][uint256(Particle.NEUTRON)]
+        ];
+    }
+    function getParticlesBalance(address addr) public view returns(uint256[3] memory) {
+
+        return [
+            particleTransmitters[addr][uint256(Particle.ELECTRON)],
+            particleTransmitters[addr][uint256(Particle.PROTON)],
+            particleTransmitters[addr][uint256(Particle.NEUTRON)]
+        ];
     }
 
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1155, ERC1155Receiver) returns (bool) {
         return super.supportsInterface(interfaceId);
+    }
+
+    modifier hasMinimalCost(uint256 id, uint256 count) {
+        uint256[3] memory composition = getElementCompound(id);
+
+        uint256 e_count = particleTransmitters[msg.sender][uint256(Particle.ELECTRON)];
+        uint256 p_count = particleTransmitters[msg.sender][uint256(Particle.PROTON)];
+        uint256 n_count = particleTransmitters[msg.sender][uint256(Particle.NEUTRON)];
+
+        require(e_count >= composition[uint256(Particle.ELECTRON)].mul(count), "Not enought electrons.");
+        require(p_count >= composition[uint256(Particle.PROTON)].mul(count), "Not enought neutrons.");
+        require(n_count >= composition[uint256(Particle.NEUTRON)].mul(count), "Not enought protons.");
+        _;
+    }
+
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 id,
+        uint256 amount,
+        bytes memory data
+    ) public virtual override hasMinimalCost(id, amount) {
+
+        uint256[3] memory composition = getElementCompound(id);
+
+        particleTransmitters[msg.sender][uint256(Particle.ELECTRON)] = particleTransmitters[msg.sender][uint256(Particle.ELECTRON)].sub(composition[uint256(Particle.ELECTRON)]);
+        particleTransmitters[msg.sender][uint256(Particle.PROTON)] = particleTransmitters[msg.sender][uint256(Particle.PROTON)].sub(composition[uint256(Particle.PROTON)]);
+        particleTransmitters[msg.sender][uint256(Particle.NEUTRON)] = particleTransmitters[msg.sender][uint256(Particle.NEUTRON)].sub(composition[uint256(Particle.NEUTRON)]);
+
+        super.safeTransferFrom(
+        from,
+        to,
+        id,
+        amount,
+        data);
     }
 
     function onERC1155Received(
@@ -70,6 +138,7 @@ contract Element is ERC1155, ERC1155Holder {
         bytes memory data)
         public override returns(bytes4) {
         
+        emit ParticleReceived(from, id, value);
         particleTransmitters[from][id] = particleTransmitters[from][id].add(value);
 
         return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
@@ -85,4 +154,6 @@ contract Element is ERC1155, ERC1155Holder {
 
         return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
     }
+
+    event ParticleReceived(address sender, uint256 id, uint256 count);
 }

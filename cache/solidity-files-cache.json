@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\contracts\\Element.sol": {
-      "lastModificationDate": 1650893679343,
-      "contentHash": "0f227efceba9941ace67a3c5c6bbbc5a",
+      "lastModificationDate": 1650905675376,
+      "contentHash": "ea400af00f1f1e63b03c298434869307",
       "sourceName": "contracts/Element.sol",
       "solcConfig": {
         "version": "0.8.4",
