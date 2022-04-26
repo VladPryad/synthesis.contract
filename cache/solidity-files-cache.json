@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\contracts\\Element.sol": {
-      "lastModificationDate": 1650905675376,
-      "contentHash": "ea400af00f1f1e63b03c298434869307",
+      "lastModificationDate": 1650987167918,
+      "contentHash": "aa19558bdd05ad79a88b7f25ccb32983",
       "sourceName": "contracts/Element.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -597,8 +597,8 @@
       ]
     },
     "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\contracts\\Molecule.sol": {
-      "lastModificationDate": 1650720676522,
-      "contentHash": "19de9091916ac72eefbd186d2664c612",
+      "lastModificationDate": 1650989164270,
+      "contentHash": "0275e8e2cf2434898e747df92054a961",
       "sourceName": "contracts/Molecule.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -626,13 +626,15 @@
       "imports": [
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
         "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        "@openzeppelin/contracts/utils/Counters.sol"
+        "@openzeppelin/contracts/utils/Counters.sol",
+        "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol",
+        "@openzeppelin/contracts/utils/math/SafeMath.sol"
       ],
       "versionPragmas": [
         "^0.8.4"
       ],
       "artifacts": [
-        "MoleculeCollection"
+        "Molecule"
       ]
     },
     "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\node_modules\\@openzeppelin\\contracts\\utils\\Counters.sol": {

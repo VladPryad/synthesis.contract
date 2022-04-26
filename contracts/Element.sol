@@ -10,6 +10,8 @@ contract Element is ERC1155, ERC1155Holder {
 
     using SafeMath for uint256;
 
+    address public owner;
+
     uint256 public constant H = 1;
     uint256 public constant Li = 3;
     uint256 public constant Na = 11;
@@ -26,6 +28,8 @@ contract Element is ERC1155, ERC1155Holder {
     mapping(address => mapping(uint256 => uint256)) public particleTransmitters;
 
     constructor() ERC1155("https://synthesis.example/api/item/{id}.json") {
+
+        owner = msg.sender;
 
         elementsCompound[H][uint256(Particle.ELECTRON)] = 1;
         elementsCompound[H][uint256(Particle.PROTON)] = 1;
@@ -82,6 +86,7 @@ contract Element is ERC1155, ERC1155Holder {
             elementsCompound[token_id][uint256(Particle.NEUTRON)]
         ];
     }
+    
     function getParticlesBalance(address addr) public view returns(uint256[3] memory) {
 
         return [
@@ -95,39 +100,32 @@ contract Element is ERC1155, ERC1155Holder {
         return super.supportsInterface(interfaceId);
     }
 
-    modifier hasMinimalCost(uint256 id, uint256 count) {
+    modifier hasMinimalCost(uint256 id, uint256 count, address addr) {
         uint256[3] memory composition = getElementCompound(id);
+        uint256[3] memory balances = getParticlesBalance(addr);
 
-        uint256 e_count = particleTransmitters[msg.sender][uint256(Particle.ELECTRON)];
-        uint256 p_count = particleTransmitters[msg.sender][uint256(Particle.PROTON)];
-        uint256 n_count = particleTransmitters[msg.sender][uint256(Particle.NEUTRON)];
-
-        require(e_count >= composition[uint256(Particle.ELECTRON)].mul(count), "Not enought electrons.");
-        require(p_count >= composition[uint256(Particle.PROTON)].mul(count), "Not enought neutrons.");
-        require(n_count >= composition[uint256(Particle.NEUTRON)].mul(count), "Not enought protons.");
+        require(balances[uint256(Particle.ELECTRON)] >= composition[uint256(Particle.ELECTRON)].mul(count), "Not enought electrons.");
+        require(balances[uint256(Particle.PROTON)] >= composition[uint256(Particle.PROTON)].mul(count), "Not enought neutrons.");
+        require(balances[uint256(Particle.NEUTRON)] >= composition[uint256(Particle.NEUTRON)].mul(count), "Not enought protons.");
         _;
     }
 
-    function safeTransferFrom(
-        address from,
-        address to,
+    function requestObtain(
+        address account,
         uint256 id,
         uint256 amount,
-        bytes memory data
-    ) public virtual override hasMinimalCost(id, amount) {
+        bytes memory data) public hasMinimalCost(id, amount, account) {
+
+        address operator = msg.sender;
+        emit ObtainRequested(operator, account, owner, id, amount);
 
         uint256[3] memory composition = getElementCompound(id);
 
-        particleTransmitters[msg.sender][uint256(Particle.ELECTRON)] = particleTransmitters[msg.sender][uint256(Particle.ELECTRON)].sub(composition[uint256(Particle.ELECTRON)]);
-        particleTransmitters[msg.sender][uint256(Particle.PROTON)] = particleTransmitters[msg.sender][uint256(Particle.PROTON)].sub(composition[uint256(Particle.PROTON)]);
-        particleTransmitters[msg.sender][uint256(Particle.NEUTRON)] = particleTransmitters[msg.sender][uint256(Particle.NEUTRON)].sub(composition[uint256(Particle.NEUTRON)]);
+        particleTransmitters[account][uint256(Particle.ELECTRON)] = particleTransmitters[account][uint256(Particle.ELECTRON)].sub(composition[uint256(Particle.ELECTRON)]);
+        particleTransmitters[account][uint256(Particle.PROTON)] = particleTransmitters[account][uint256(Particle.PROTON)].sub(composition[uint256(Particle.PROTON)]);
+        particleTransmitters[account][uint256(Particle.NEUTRON)] = particleTransmitters[account][uint256(Particle.NEUTRON)].sub(composition[uint256(Particle.NEUTRON)]);
 
-        super.safeTransferFrom(
-        from,
-        to,
-        id,
-        amount,
-        data);
+        safeTransferFrom(owner, account, id, amount, data);
     }
 
     function onERC1155Received(
@@ -156,4 +154,5 @@ contract Element is ERC1155, ERC1155Holder {
     }
 
     event ParticleReceived(address sender, uint256 id, uint256 count);
+    event ObtainRequested(address operator, address applicant, address owner, uint256 id, uint256 count);
 }

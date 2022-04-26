@@ -15,6 +15,9 @@ describe('Element & Particle contract', () => {
         Particle = await ethers.getContractFactory('Particle');
         particle = await Particle.deploy();
 
+        Molecule = await ethers.getContractFactory('Molecule');
+        molecule = await Molecule.deploy();
+
         [owner, addr1, addr2, _] = await ethers.getSigners();
     })
 
@@ -54,7 +57,7 @@ describe('Element & Particle contract', () => {
 
     describe("Element minting", () => {
 
-        it('Transfer electrons to element contract', async () => {
+        it('Transfer particles and minting element', async () => {
             let Li_id = 3;
 
             await particle.connect(addr1).setApprovalForAll(owner.address, true);
@@ -67,12 +70,81 @@ describe('Element & Particle contract', () => {
             await particle.safeTransferFrom(addr1.address, element.address, 1, 3, "0x00");
             await particle.safeTransferFrom(addr1.address, element.address, 2, 4, "0x00");
 
-            console.log("Particles balance: ", await element.getParticlesBalance(addr1.address))
+            // console.log(`Particles balance@${addr1.address}: `, await element.getParticlesBalance(addr1.address))
 
-            await element.connect(addr1).safeTransferFrom(owner.address, addr1.address, Li_id, 1, "0x00");
+            await element.connect(addr1).setApprovalForAll(owner.address, true);
+
+            expect(await element.isApprovedForAll(addr1.address, owner.address)).to.equal(true);
+
+            await element.connect(owner).requestObtain(addr1.address, Li_id, 1, "0x00");
 
             let balanceLi = await element.balanceOf(addr1.address, Li_id);
             expect(balanceLi).to.equal(BigNumber.from(1))
         })
     });
+
+    describe("Element => Molecule transfer", () => {
+        const H_id = 1;
+        const O_id = 8;
+
+        beforeEach(async () => {
+            await particle.connect(addr1).setApprovalForAll(owner.address, true);
+
+            await particle.safeTransferFrom(owner.address, addr1.address, 0, 2+8, "0x00");
+            await particle.safeTransferFrom(owner.address, addr1.address, 1, 2+8, "0x00");
+            await particle.safeTransferFrom(owner.address, addr1.address, 2, 0+8, "0x00");
+
+            await particle.safeTransferFrom(addr1.address, element.address, 0, 2+8, "0x00");
+            await particle.safeTransferFrom(addr1.address, element.address, 1, 2+8, "0x00");
+            await particle.safeTransferFrom(addr1.address, element.address, 2, 0+8, "0x00");
+
+            // console.log(`Particles balance@${addr1.address}: `, await element.getParticlesBalance(addr1.address))
+
+            await element.connect(addr1).setApprovalForAll(owner.address, true);
+
+            expect(await element.isApprovedForAll(addr1.address, owner.address)).to.equal(true);
+
+            await element.connect(owner).requestObtain(addr1.address, H_id, 2, "0x00");
+            await element.connect(owner).requestObtain(addr1.address, O_id, 1, "0x00");
+
+            expect(await element.balanceOf(addr1.address, H_id)).to.equal(BigNumber.from(2));
+            expect(await element.balanceOf(addr1.address, O_id)).to.equal(BigNumber.from(1));
+        })
+
+        it("Minting H2O molecule nft", async () => {
+            const waterAtomicCompound = [0,2,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0];
+
+            await molecule.mintMolecule("", waterAtomicCompound);
+
+            let h2ocomp = await molecule.getMoleculeCompound(0);
+            h2ocomp = h2ocomp.map(el => el.toNumber())
+
+            expect(h2ocomp).to.eql(waterAtomicCompound);
+        });
+
+        describe("Obtaining water nft", () => {
+            const waterAtomicCompound = [0,2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0];
+
+            beforeEach(async () => {
+                await molecule.mintMolecule("", waterAtomicCompound);
+
+                let h2ocomp = await molecule.getMoleculeCompound(0);
+                h2ocomp = h2ocomp.map(el => el.toNumber())
+
+                expect(h2ocomp).to.eql(waterAtomicCompound);
+            })
+
+            it("Transferring elements for molecule", async () => {
+
+                await element.connect(addr1).safeTransferFrom(addr1.address, molecule.address, H_id, 2, "0x00");
+                await element.connect(addr1).safeTransferFrom(addr1.address, molecule.address, O_id, 1, "0x00");
+
+                let bal = await molecule.getElementsBalance(addr1.address);
+                bal = bal.map(el => el.toNumber())
+
+                expect(bal).to.eql(waterAtomicCompound);
+            })
+        })
+
+    })
 });
