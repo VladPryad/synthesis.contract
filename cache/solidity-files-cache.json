@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\contracts\\Element.sol": {
-      "lastModificationDate": 1650987167918,
-      "contentHash": "aa19558bdd05ad79a88b7f25ccb32983",
+      "lastModificationDate": 1651055779908,
+      "contentHash": "0901bdd0aaace46863d9596dc80a39c6",
       "sourceName": "contracts/Element.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -30,8 +30,8 @@
       },
       "imports": [
         "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
-        "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol",
-        "@openzeppelin/contracts/utils/math/SafeMath.sol"
+        "@openzeppelin/contracts/utils/math/SafeMath.sol",
+        "./interfaces/ERC20Holder.sol"
       ],
       "versionPragmas": [
         "^0.8.4"
@@ -780,6 +780,346 @@
       ],
       "artifacts": [
         "ERC1155Receiver"
+      ]
+    },
+    "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\contracts\\interfaces\\ERC20Holder.sol": {
+      "lastModificationDate": 1651055519424,
+      "contentHash": "08f522df6bc9511cf95b67d528e78876",
+      "sourceName": "contracts/interfaces/ERC20Holder.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./ERC20Receiver.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "ERC20Holder"
+      ]
+    },
+    "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\contracts\\interfaces\\ERC20Receiver.sol": {
+      "lastModificationDate": 1651056241949,
+      "contentHash": "b1336ba8530a3ebc65c97bf8812980d8",
+      "sourceName": "contracts/interfaces/ERC20Receiver.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/introspection/ERC165.sol",
+        "./IERC20Receiver.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "ERC20Receiver"
+      ]
+    },
+    "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\contracts\\interfaces\\IERC20Receiver.sol": {
+      "lastModificationDate": 1651055211476,
+      "contentHash": "fd512817afc879a61beb027b311f2085",
+      "sourceName": "contracts/interfaces/IERC20Receiver.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/utils/introspection/IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "IERC20Receiver"
+      ]
+    },
+    "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\contracts\\particles\\Electron.sol": {
+      "lastModificationDate": 1651056523201,
+      "contentHash": "18f2897b56081a4924a244be3ac0258b",
+      "sourceName": "contracts/particles/Electron.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/utils/Address.sol",
+        "../interfaces/IERC20Receiver.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "Electron"
+      ]
+    },
+    "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol": {
+      "lastModificationDate": 1650717751237,
+      "contentHash": "bab063ddd80e9cc9e313361fef7ef07f",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IERC20.sol",
+        "./extensions/IERC20Metadata.sol",
+        "../../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC20"
+      ]
+    },
+    "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\IERC20.sol": {
+      "lastModificationDate": 1650717751488,
+      "contentHash": "a44d1a099633876550ad2476b21bafbe",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
+    "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\IERC20Metadata.sol": {
+      "lastModificationDate": 1650717751513,
+      "contentHash": "909ab67fc5c25033fe6cd364f8c056f9",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20Metadata"
+      ]
+    },
+    "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\contracts\\particles\\Proton.sol": {
+      "lastModificationDate": 1651056788633,
+      "contentHash": "4435eae8d79f7cadb45732c8eb760a37",
+      "sourceName": "contracts/particles/Proton.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/utils/Address.sol",
+        "../interfaces/IERC20Receiver.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "Proton"
+      ]
+    },
+    "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\contracts\\particles\\Neutron.sol": {
+      "lastModificationDate": 1651056788633,
+      "contentHash": "2dc3c6cf2d09727ebf9715ea6a987d28",
+      "sourceName": "contracts/particles/Neutron.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+        "@openzeppelin/contracts/utils/Address.sol",
+        "../interfaces/IERC20Receiver.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.4"
+      ],
+      "artifacts": [
+        "Neutron"
       ]
     }
   }

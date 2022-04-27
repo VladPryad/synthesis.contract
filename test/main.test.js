@@ -6,14 +6,25 @@ describe('Element & Particle contract', () => {
 
     let owner, addr1, addr2;
     let Element, element;
-    let Particle, particle;
+    let Molecule, molecule;
+
+    let Electron, electron;
+    let Proton, proton;
+    let Neutron, neutron;
 
     beforeEach(async () => {
+
+        Electron = await ethers.getContractFactory('Electron');
+        electron = await Electron.deploy("84000000000000000000000000000"); //84*10**27
+
+        Proton = await ethers.getContractFactory('Proton');
+        proton = await Proton.deploy("84000000000000000000000000000");
+
+        Neutron = await ethers.getContractFactory('Neutron');
+        neutron = await Neutron.deploy("86000000000000000000000000000");
+
         Element = await ethers.getContractFactory('Element');
         element = await Element.deploy();
-
-        Particle = await ethers.getContractFactory('Particle');
-        particle = await Particle.deploy();
 
         Molecule = await ethers.getContractFactory('Molecule');
         molecule = await Molecule.deploy();
@@ -21,10 +32,11 @@ describe('Element & Particle contract', () => {
         [owner, addr1, addr2, _] = await ethers.getSigners();
     })
 
-    describe('Deployment Particle', () => {
-        it('Particle owner', async () => {
-            const count = await particle.balanceOf(owner.address, 0);
-            expect(count).to.equal(BigNumber.from("84000000000000000000000000000"))
+    describe('Deployment Particles', () => {
+        it('Particles owner', async () => {
+            expect(await electron.balanceOf(owner.address)).to.equal(BigNumber.from("84000000000000000000000000000"))
+            expect(await proton.balanceOf(owner.address)).to.equal(BigNumber.from("84000000000000000000000000000"))
+            expect(await neutron.balanceOf(owner.address)).to.equal(BigNumber.from("86000000000000000000000000000"))
         })
     })
 
@@ -41,17 +53,20 @@ describe('Element & Particle contract', () => {
         })
     })
 
-    describe("Particle => Element transfer", () => {
+    describe("Particles => Element transfer", () => {
 
         it('Transfer electrons to element contract', async () => {
             let token_id = 0;
             let token_count = 3;
 
-            let receipt = await particle.safeTransferFrom(owner.address, element.address, token_id, token_count, "0x00");
+            let receipt = await electron.transfer(element.address, token_count);
 
-            console.log('Checking electrons received');
-            let balanceE = await particle.balanceOf(element.address, token_id);
-            expect(balanceE).to.equal(BigNumber.from(3))
+            let balanceElec = await electron.balanceOf(element.address);
+            let balanceElem = await element.getParticlesBalance(owner.address);
+            balanceElem = balanceElem.map(el => el.toNumber())
+
+            expect(balanceElec).to.equal(BigNumber.from(3))
+            expect(balanceElem).to.eql([3,0,0])
         })
     });
 
@@ -60,15 +75,17 @@ describe('Element & Particle contract', () => {
         it('Transfer particles and minting element', async () => {
             let Li_id = 3;
 
-            await particle.connect(addr1).setApprovalForAll(owner.address, true);
+            await electron.connect(addr1).approve(owner.address, BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
+            await proton.connect(addr1).approve(owner.address, BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
+            await neutron.connect(addr1).approve(owner.address, BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
 
-            await particle.safeTransferFrom(owner.address, addr1.address, 0, 3, "0x00");
-            await particle.safeTransferFrom(owner.address, addr1.address, 1, 3, "0x00");
-            await particle.safeTransferFrom(owner.address, addr1.address, 2, 4, "0x00");
+            await electron.transfer(addr1.address, 3);
+            await proton.transfer(addr1.address, 3);
+            await neutron.transfer( addr1.address, 4);
 
-            await particle.safeTransferFrom(addr1.address, element.address, 0, 3, "0x00");
-            await particle.safeTransferFrom(addr1.address, element.address, 1, 3, "0x00");
-            await particle.safeTransferFrom(addr1.address, element.address, 2, 4, "0x00");
+            await electron.connect(addr1).transfer(element.address, 3);
+            await proton.connect(addr1).transfer(element.address, 3);
+            await neutron.connect(addr1).transfer(element.address, 4);
 
             // console.log(`Particles balance@${addr1.address}: `, await element.getParticlesBalance(addr1.address))
 
@@ -88,15 +105,18 @@ describe('Element & Particle contract', () => {
         const O_id = 8;
 
         beforeEach(async () => {
-            await particle.connect(addr1).setApprovalForAll(owner.address, true);
 
-            await particle.safeTransferFrom(owner.address, addr1.address, 0, 2+8, "0x00");
-            await particle.safeTransferFrom(owner.address, addr1.address, 1, 2+8, "0x00");
-            await particle.safeTransferFrom(owner.address, addr1.address, 2, 0+8, "0x00");
+            await electron.connect(addr1).approve(owner.address, BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
+            await proton.connect(addr1).approve(owner.address, BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
+            await neutron.connect(addr1).approve(owner.address, BigNumber.from("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"));
 
-            await particle.safeTransferFrom(addr1.address, element.address, 0, 2+8, "0x00");
-            await particle.safeTransferFrom(addr1.address, element.address, 1, 2+8, "0x00");
-            await particle.safeTransferFrom(addr1.address, element.address, 2, 0+8, "0x00");
+            await electron.transfer(addr1.address, 10);
+            await proton.transfer(addr1.address, 10);
+            await neutron.transfer( addr1.address, 8);
+
+            await electron.connect(addr1).transfer(element.address, 10);
+            await proton.connect(addr1).transfer(element.address, 10);
+            await neutron.connect(addr1).transfer(element.address, 8);
 
             // console.log(`Particles balance@${addr1.address}: `, await element.getParticlesBalance(addr1.address))
 

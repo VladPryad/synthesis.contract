@@ -3,10 +3,10 @@
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "./interfaces/ERC20Holder.sol";
 
-contract Element is ERC1155, ERC1155Holder {
+contract Element is ERC1155, ERC20Holder {
 
     using SafeMath for uint256;
 
@@ -96,7 +96,7 @@ contract Element is ERC1155, ERC1155Holder {
         ];
     }
 
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1155, ERC1155Receiver) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1155, ERC20Receiver) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 
@@ -128,30 +128,41 @@ contract Element is ERC1155, ERC1155Holder {
         safeTransferFrom(owner, account, id, amount, data);
     }
 
-    function onERC1155Received(
-        address operator,
+    function onERC20Received(
         address from,
         uint256 id,
-        uint256 value, 
-        bytes memory data)
-        public override returns(bytes4) {
-        
+        uint256 value
+    ) public override returns(bool) {
         emit ParticleReceived(from, id, value);
         particleTransmitters[from][id] = particleTransmitters[from][id].add(value);
 
-        return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
+        return true;
     }
 
-    function onERC1155BatchReceived(
-        address operator,
-        address from,
-        uint256[] memory ids,
-        uint256[] memory values,
-        bytes memory data)
-        public override returns(bytes4) {
+    // function onERC1155Received(
+    //     address operator,
+    //     address from,
+    //     uint256 id,
+    //     uint256 value, 
+    //     bytes memory data)
+    //     public override returns(bytes4) {
+        
+    //     emit ParticleReceived(from, id, value);
+    //     particleTransmitters[from][id] = particleTransmitters[from][id].add(value);
 
-        return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
-    }
+    //     return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
+    // }
+
+    // function onERC1155BatchReceived(
+    //     address operator,
+    //     address from,
+    //     uint256[] memory ids,
+    //     uint256[] memory values,
+    //     bytes memory data)
+    //     public override returns(bytes4) {
+
+    //     return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
+    // }
 
     event ParticleReceived(address sender, uint256 id, uint256 count);
     event ObtainRequested(address operator, address applicant, address owner, uint256 id, uint256 count);
