@@ -8,20 +8,15 @@ describe('Element & Particle contract', () => {
     let Element, element;
     let Molecule, molecule;
 
-    let Electron, electron;
-    let Proton, proton;
-    let Neutron, neutron;
+    let electron, proton, neutron;
 
     beforeEach(async () => {
 
-        Electron = await ethers.getContractFactory('Electron');
-        electron = await Electron.deploy("84000000000000000000000000000"); //84*10**27
+        Particle = await ethers.getContractFactory('Particle');
 
-        Proton = await ethers.getContractFactory('Proton');
-        proton = await Proton.deploy("84000000000000000000000000000");
-
-        Neutron = await ethers.getContractFactory('Neutron');
-        neutron = await Neutron.deploy("86000000000000000000000000000");
+        electron = await Particle.deploy("84000000000000000000000000000", "EEE", "Electron", 0);
+        proton = await Particle.deploy("84000000000000000000000000000", "PPP", "Proton", 1);
+        neutron = await Particle.deploy("86000000000000000000000000000", "NNN", "Neutron", 2);
 
         Element = await ethers.getContractFactory('Element');
         element = await Element.deploy();
@@ -152,6 +147,7 @@ describe('Element & Particle contract', () => {
                 h2ocomp = h2ocomp.map(el => el.toNumber())
 
                 expect(h2ocomp).to.eql(waterAtomicCompound);
+                expect(await molecule.ownerOf(0)).to.equal(owner.address);
             })
 
             it("Transferring elements for molecule", async () => {
@@ -163,6 +159,30 @@ describe('Element & Particle contract', () => {
                 bal = bal.map(el => el.toNumber())
 
                 expect(bal).to.eql(waterAtomicCompound);
+            })
+
+            it("Obtaining water", async () => {
+
+                await element.connect(addr1).safeTransferFrom(addr1.address, molecule.address, H_id, 2, "0x00");
+                await element.connect(addr1).safeTransferFrom(addr1.address, molecule.address, O_id, 1, "0x00");
+
+                let bal = await molecule.getElementsBalance(addr1.address);
+                bal = bal.map(el => el.toNumber())
+
+                expect(bal).to.eql(waterAtomicCompound);
+
+                await molecule.approve(addr1.address, 0);
+
+                expect(await molecule.getApproved(0)).to.equal(addr1.address);
+
+                await molecule.connect(owner).requestObtain(addr1.address, 0);
+
+                expect(await molecule.ownerOf(0)).to.equal(addr1.address);
+
+                bal = await molecule.getElementsBalance(addr1.address);
+                bal = bal.map(el => el.toNumber())
+
+                expect(bal).to.eql([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]);
             })
         })
 

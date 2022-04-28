@@ -76,6 +76,23 @@ contract Molecule is ERC721URIStorage, ERC1155Holder {
         return molId;
     }
 
+    function requestObtain(
+        address account,
+        uint256 id)
+        public hasMinimalCost(id, account) {
+
+        address operator = msg.sender;
+        emit ObtainRequested(operator, account, owner, id);
+
+        uint256[18] memory composition = getMoleculeCompound(id);
+
+        for(uint256 i = 0; i < 18; i++) {
+            elementTransmitters[account][i] = elementTransmitters[account][i].sub(composition[i]);
+        }
+
+        safeTransferFrom(owner, account, id);
+    }
+
     function onERC1155Received(
         address operator,
         address from,
@@ -102,4 +119,5 @@ contract Molecule is ERC721URIStorage, ERC1155Holder {
     }
 
     event ElementReceived(address sender, uint256 id, uint256 count);
+    event ObtainRequested(address operator, address applicant, address owner, uint256 id);
 }

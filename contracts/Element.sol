@@ -139,31 +139,6 @@ contract Element is ERC1155, ERC20Holder {
         return true;
     }
 
-    // function onERC1155Received(
-    //     address operator,
-    //     address from,
-    //     uint256 id,
-    //     uint256 value, 
-    //     bytes memory data)
-    //     public override returns(bytes4) {
-        
-    //     emit ParticleReceived(from, id, value);
-    //     particleTransmitters[from][id] = particleTransmitters[from][id].add(value);
-
-    //     return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
-    // }
-
-    // function onERC1155BatchReceived(
-    //     address operator,
-    //     address from,
-    //     uint256[] memory ids,
-    //     uint256[] memory values,
-    //     bytes memory data)
-    //     public override returns(bytes4) {
-
-    //     return bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"));
-    // }
-
     event ParticleReceived(address sender, uint256 id, uint256 count);
     event ObtainRequested(address operator, address applicant, address owner, uint256 id, uint256 count);
 }
