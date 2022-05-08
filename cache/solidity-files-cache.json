@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\contracts\\Element.sol": {
-      "lastModificationDate": 1651145406523,
-      "contentHash": "f20b221c3bd4f28437e7cf4582aecc6c",
+      "lastModificationDate": 1652004982285,
+      "contentHash": "8cd6be4155df8b8db962bd80997e68e9",
       "sourceName": "contracts/Element.sol",
       "solcConfig": {
         "version": "0.8.4",
@@ -599,8 +599,8 @@
       ]
     },
     "C:\\Папочка\\Programming\\Projects\\Blockchain\\evm\\synthesis\\contracts\\Molecule.sol": {
-      "lastModificationDate": 1651172386909,
-      "contentHash": "666666c034f5ab7886649a5c19706610",
+      "lastModificationDate": 1652004807628,
+      "contentHash": "8a4e2c9e082deb54ea932413e0d34311",
       "sourceName": "contracts/Molecule.sol",
       "solcConfig": {
         "version": "0.8.4",

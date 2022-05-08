@@ -125,7 +125,7 @@ contract Element is ERC1155, ERC20Holder {
         particleTransmitters[account][uint256(Particle.PROTON)] = particleTransmitters[account][uint256(Particle.PROTON)].sub(composition[uint256(Particle.PROTON)]);
         particleTransmitters[account][uint256(Particle.NEUTRON)] = particleTransmitters[account][uint256(Particle.NEUTRON)].sub(composition[uint256(Particle.NEUTRON)]);
 
-        safeTransferFrom(owner, account, id, amount, data);
+        _safeTransferFrom(owner, account, id, amount, data);
     }
 
     function onERC20Received(

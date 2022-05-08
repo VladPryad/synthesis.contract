@@ -90,7 +90,7 @@ contract Molecule is ERC721URIStorage, ERC1155Holder {
             elementTransmitters[account][i] = elementTransmitters[account][i].sub(composition[i]);
         }
 
-        safeTransferFrom(owner, account, id);
+        _transfer(owner, account, id);
     }
 
     function onERC1155Received(

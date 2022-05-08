@@ -88,7 +88,7 @@ describe('Element & Particle contract', () => {
 
             expect(await element.isApprovedForAll(addr1.address, owner.address)).to.equal(true);
 
-            await element.connect(owner).requestObtain(addr1.address, Li_id, 1, "0x00");
+            await element.connect(addr1).requestObtain(addr1.address, Li_id, 1, "0x00");
 
             let balanceLi = await element.balanceOf(addr1.address, Li_id);
             expect(balanceLi).to.equal(BigNumber.from(1))
@@ -119,8 +119,8 @@ describe('Element & Particle contract', () => {
 
             expect(await element.isApprovedForAll(addr1.address, owner.address)).to.equal(true);
 
-            await element.connect(owner).requestObtain(addr1.address, H_id, 2, "0x00");
-            await element.connect(owner).requestObtain(addr1.address, O_id, 1, "0x00");
+            await element.connect(addr1).requestObtain(addr1.address, H_id, 2, "0x00");
+            await element.connect(addr1).requestObtain(addr1.address, O_id, 1, "0x00");
 
             expect(await element.balanceOf(addr1.address, H_id)).to.equal(BigNumber.from(2));
             expect(await element.balanceOf(addr1.address, O_id)).to.equal(BigNumber.from(1));
@@ -175,7 +175,7 @@ describe('Element & Particle contract', () => {
 
                 expect(await molecule.getApproved(0)).to.equal(addr1.address);
 
-                await molecule.connect(owner).requestObtain(addr1.address, 0);
+                await molecule.connect(addr1).requestObtain(addr1.address, 0);
 
                 expect(await molecule.ownerOf(0)).to.equal(addr1.address);
 
