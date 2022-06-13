@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const { BigNumber } = require('ethers');
 const { ethers } = require('hardhat');
 
-describe('Element & Particle contract', () => {
+describe('Element & Particle & Molecule contracts', () => {
 
     let owner, addr1, addr2;
     let Element, element;
